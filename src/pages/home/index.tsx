@@ -6,7 +6,7 @@ import StatsSection from "./stats-section";
 
 const HomePage = () => {
   return (
-    <View className="px-4">
+    <View className="px-4 flex-1">
       <HeaderSection />
       <StatsSection />
       <DevicesSection />

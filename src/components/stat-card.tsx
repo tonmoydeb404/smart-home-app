@@ -8,7 +8,7 @@ import {
 } from "lucide-react-native";
 import React from "react";
 import { Text, View } from "react-native";
-import { Card, CardBody } from "./common/card";
+import { Card, CardBody, CardBodyProps, CardProps } from "./common/card";
 
 // ----------------------------------------------------------------------
 
@@ -24,22 +24,24 @@ type Props = {
   label: string;
   value: string;
   icon: keyof typeof icons;
+  cardProps?: Omit<CardProps, "children">;
+  cardBodyProps?: Omit<CardBodyProps, "children">;
 };
 
 // ----------------------------------------------------------------------
 
 const StatCard = (props: Props) => {
-  const { icon, label, value } = props;
+  const { icon, label, value, cardBodyProps, cardProps } = props;
 
   const Icon = icons[icon] || LucideHelpCircle;
 
   return (
-    <Card className="border-none bg-transparent">
-      <CardBody className="flex-row items-center gap-2">
-        <Icon size={32} className="text-amber-600" />
+    <Card {...cardProps}>
+      <CardBody className="flex-row items-center gap-2" {...cardBodyProps}>
+        <Icon size={32} className="text-blue-600" />
         <View className="flex flex-col">
-          <Text className="text-xs uppercase">{label}</Text>
-          <Text className="text-xl font-medium">{value}</Text>
+          <Text className="text-slate-400 text-xs uppercase">{label}</Text>
+          <Text className="text-slate-100 text-xl font-medium">{value}</Text>
         </View>
       </CardBody>
     </Card>

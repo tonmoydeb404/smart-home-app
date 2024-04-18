@@ -13,4 +13,5 @@ export interface HomeContext {
   sensors: SensorState<number | undefined>;
 
   updateDevice: (index: number, status: boolean) => void;
+  reconnect: () => void;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { FlatList, Text } from "react-native";
 import DeviceCard from "../../components/device-card";
 import useHome from "../../hooks/contexts/use-home";
 
@@ -8,12 +8,28 @@ const DevicesSection = () => {
 
   return (
     <>
-      <Text className="uppercase font-medium text-sm mb-2">Devices</Text>
-      <View className="flex flex-row flex-wrap gap-5">
-        {devices.map((item, index) => (
-          <DeviceCard index={index} currentStatus={item} key={index} />
-        ))}
-      </View>
+      <Text className="text-slate-300 uppercase font-medium text-sm mb-3">
+        Devices
+      </Text>
+
+      <FlatList
+        data={devices}
+        className="pb-20 "
+        renderItem={({ index, item }) => (
+          <DeviceCard
+            index={index}
+            currentStatus={item}
+            key={index}
+            cardProps={{
+              pressable: true,
+              onPress: () => updateDevice(index, !item),
+            }}
+          />
+        )}
+        keyExtractor={(_item, index) => index.toString()}
+        numColumns={2}
+        horizontal={false}
+      />
     </>
   );
 };

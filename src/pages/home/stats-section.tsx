@@ -9,9 +9,11 @@ const StatsSection = () => {
 
   return (
     <>
-      <Text className="uppercase font-medium text-sm mb-2">Sensor Stats</Text>
+      <Text className="uppercase text-slate-300 font-medium text-sm mb-2">
+        Sensor Stats
+      </Text>
       <Card className="border-none bg-background/60 dark:bg-default-100/50 mb-8">
-        <CardBody className="flex flow-row agp: ">
+        <CardBody className="flex-row flex-wrap">
           <StatCard
             icon="temperature"
             label="Temperature"
@@ -20,6 +22,7 @@ const StatsSection = () => {
                 ? `${sensors.temperature.toFixed(1)}deg`
                 : "not set"
             }
+            cardProps={{ className: "w-1/2" }}
           />
           <StatCard
             icon="humidity"
@@ -29,6 +32,7 @@ const StatsSection = () => {
                 ? `${sensors.humidity.toFixed(0)}%`
                 : "not set"
             }
+            cardProps={{ className: "w-1/2" }}
           />
           <StatCard
             icon="gas"
@@ -38,6 +42,7 @@ const StatsSection = () => {
                 ? `${sensors.gas >= 600 ? "Yes" : "No"} (${sensors.gas})`
                 : "not set"
             }
+            cardProps={{ className: "w-1/2" }}
           />
           <StatCard
             icon="fire"
@@ -47,6 +52,7 @@ const StatsSection = () => {
                 ? `${sensors.flame === 1 ? "No" : "Yes"} `
                 : "not set"
             }
+            cardProps={{ className: "w-1/2" }}
           />
           <StatCard
             icon="weather"
@@ -56,6 +62,7 @@ const StatsSection = () => {
                 ? `${sensors.rain <= 3000 ? "Raining" : "Normal"} `
                 : "not set"
             }
+            cardProps={{ className: "w-1/2" }}
           />
         </CardBody>
       </Card>

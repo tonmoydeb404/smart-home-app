@@ -1,13 +1,18 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { ScrollView } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import HomePage from "./src/pages/home";
+import Providers from "./src/providers";
 
 export default function App() {
   return (
-    <ScrollView className="my-10">
-      <HomePage />
+    <View className="flex-1 mt-7 pt-5 bg-slate-950 text-slate-50">
       <StatusBar style="auto" />
-    </ScrollView>
+      <SafeAreaView className="flex-1">
+        <Providers>
+          <HomePage />
+        </Providers>
+      </SafeAreaView>
+    </View>
   );
 }

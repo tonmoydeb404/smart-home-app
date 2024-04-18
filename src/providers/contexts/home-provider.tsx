@@ -152,7 +152,7 @@ const HomeProvider = (props: Props) => {
   };
 
   // Dependent States ----------------------------------------------------------------------
-  const { isLoading, isReady, send } = useWebSocket(
+  const { isLoading, isReady, send, reconnect } = useWebSocket(
     "ws://smarthome.local:81",
     handleNewMessage
   );
@@ -187,6 +187,7 @@ const HomeProvider = (props: Props) => {
       updateDevice,
       devices,
       sensors,
+      reconnect,
     }),
     [devices, isLoading, isReady, sensors, updateDevice]
   );
