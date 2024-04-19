@@ -1,8 +1,9 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { Card, CardBody } from "../../components/common/card";
 import StatCard from "../../components/stat-card";
 import useHome from "../../hooks/contexts/use-home";
+import { HomeContext } from "../../types/home";
 
 const StatsSection = () => {
   const { sensors } = useHome();
@@ -13,57 +14,43 @@ const StatsSection = () => {
         Sensor Stats
       </Text>
       <Card className="border-none bg-background/60 dark:bg-default-100/50 mb-8">
-        <CardBody className="flex-row flex-wrap">
-          <StatCard
-            icon="temperature"
-            label="Temperature"
-            value={
-              sensors?.temperature !== undefined
-                ? `${sensors.temperature.toFixed(1)}deg`
-                : "not set"
-            }
-            cardProps={{ className: "w-1/2" }}
-          />
-          <StatCard
-            icon="humidity"
-            label="Humidity"
-            value={
-              sensors?.humidity !== undefined
-                ? `${sensors.humidity.toFixed(0)}%`
-                : "not set"
-            }
-            cardProps={{ className: "w-1/2" }}
-          />
-          <StatCard
-            icon="gas"
-            label="Gas"
-            value={
-              sensors?.gas !== undefined
-                ? `${sensors.gas >= 600 ? "Yes" : "No"} (${sensors.gas})`
-                : "not set"
-            }
-            cardProps={{ className: "w-1/2" }}
-          />
-          <StatCard
-            icon="fire"
-            label="Fire"
-            value={
-              sensors?.flame !== undefined
-                ? `${sensors.flame === 1 ? "No" : "Yes"} `
-                : "not set"
-            }
-            cardProps={{ className: "w-1/2" }}
-          />
-          <StatCard
-            icon="weather"
-            label="Weather"
-            value={
-              sensors?.rain !== undefined && sensors?.rain !== 0
-                ? `${sensors.rain <= 3000 ? "Raining" : "Normal"} `
-                : "not set"
-            }
-            cardProps={{ className: "w-1/2" }}
-          />
+        <CardBody className="flex-col">
+          <View className="w-full flex-row my-1 space-x-1">
+            <StatCard
+              icon="temperature"
+              label="Temperature"
+              value={getValue("temperature", sensors.temperature)}
+              cardProps={{ className: "w-full flex-1 mx-1" }}
+            />
+            <StatCard
+              icon="humidity"
+              label="Humidity"
+              value={getValue("humidity", sensors.humidity)}
+              cardProps={{ className: "w-full flex-1 mx-1" }}
+            />
+          </View>
+          <View className="w-full flex-row my-1">
+            <StatCard
+              icon="gas"
+              label="Gas"
+              value={getValue("gas", sensors.gas)}
+              cardProps={{ className: "w-full flex-1 mx-1" }}
+            />
+            <StatCard
+              icon="fire"
+              label="Fire"
+              value={getValue("flame", sensors.flame)}
+              cardProps={{ className: "w-full flex-1 mx-1" }}
+            />
+          </View>
+          <View className="w-full flex-row my-1">
+            <StatCard
+              icon="weather"
+              label="Weather"
+              value={getValue("rain", sensors.rain)}
+              cardProps={{ className: "w-full flex-1 mx-1" }}
+            />
+          </View>
         </CardBody>
       </Card>
     </>
@@ -71,3 +58,34 @@ const StatsSection = () => {
 };
 
 export default StatsSection;
+
+const getValue = (
+  key: keyof HomeContext["sensors"],
+  value: number | undefined
+) => {
+  if (value === undefined) {
+    return "Not set";
+  }
+
+  if (key === "temperature") {
+    return `${value.toFixed(1)}deg`;
+  }
+
+  if (key === "humidity") {
+    return `${value.toFixed(0)}%`;
+  }
+
+  if (key === "gas") {
+    return `${value >= 600 ? "Yes" : "No"} (${value})`;
+  }
+
+  if (key === "flame") {
+    return `${value === 1 ? "No" : "Yes"}`;
+  }
+
+  if (key === "rain" && value !== 0) {
+    return `${value <= 3000 ? "Raining" : "Normal"}`;
+  }
+
+  return "Not set";
+};

@@ -1,75 +1,56 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const useWebSocket = (url: string, onMessage?: (message: string) => void) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [reconnectCount, setReconnectCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
-  const reconnectCount = useRef(0);
 
-  const connectWebSocket = () => {
-    setIsLoading(true);
+  useEffect(() => {
     const newSocket = new WebSocket(url);
 
-    const handleOpen = () => {
+    newSocket.onopen = () => {
+      console.log("OPEN");
+
       setIsLoading(false);
       setIsReady(true);
-      reconnectCount.current = 0; // Reset reconnect count on successful connection
     };
 
-    const handleMessage = (event: MessageEvent) => {
+    newSocket.onmessage = (event: MessageEvent) => {
+      // console.log("MESSAGE");
       setMessage(event.data);
       if (onMessage) onMessage(event.data);
     };
 
-    const handleClose = () => {
+    newSocket.onclose = (e) => {
+      console.log("CLOSE", e);
       setIsLoading(false);
       setIsReady(false);
-      reconnect();
     };
 
-    const handleError = () => {
+    newSocket.onerror = (e) => {
+      console.log("ERROR", e);
+      setIsReady(false);
       setIsLoading(false);
-      reconnect();
     };
-
-    newSocket.addEventListener("open", handleOpen);
-    newSocket.addEventListener("message", handleMessage);
-    newSocket.addEventListener("close", handleClose);
-    newSocket.addEventListener("error", handleError);
 
     setSocket(newSocket);
-  };
-
-  const reconnect = () => {
-    const maxReconnectAttempts = 5;
-    const reconnectInterval = 3000; // 3 seconds
-
-    if (reconnectCount.current < maxReconnectAttempts) {
-      setTimeout(() => {
-        reconnectCount.current++;
-        connectWebSocket();
-      }, reconnectInterval);
-    } else {
-      // console.log("Max reconnect attempts reached");
-    }
-  };
-
-  useEffect(() => {
-    connectWebSocket();
 
     return () => {
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
+      newSocket.close();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [url, reconnectCount]);
 
   const send = (data: string) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(data);
     }
+  };
+
+  const reconnect = () => {
+    setReconnectCount((prev) => prev + 1);
   };
 
   return { message, isLoading, isReady, socket, send, reconnect };

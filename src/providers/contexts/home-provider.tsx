@@ -153,7 +153,7 @@ const HomeProvider = (props: Props) => {
 
   // Dependent States ----------------------------------------------------------------------
   const { isLoading, isReady, send, reconnect } = useWebSocket(
-    "ws://smarthome.local:81",
+    "ws://192.168.0.107:81",
     handleNewMessage
   );
 
@@ -175,8 +175,13 @@ const HomeProvider = (props: Props) => {
 
   // Effects ----------------------------------------------------------------------
   // useEffect(() => {
-  //   // console.log(message);
-  // }, [message]);
+  //   const getIp = async () => {
+  //     // const ip = await getIpAddressAsync();
+  //     // console.log({ ip });
+  //   };
+
+  //   getIp();
+  // }, []);
 
   // Memorized values ----------------------------------------------------------------------
 
