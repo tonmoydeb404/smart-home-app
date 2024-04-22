@@ -153,7 +153,7 @@ const HomeProvider = (props: Props) => {
 
   // Dependent States ----------------------------------------------------------------------
   const { isLoading, isReady, send, reconnect } = useWebSocket(
-    "ws://192.168.0.107:81",
+    "ws://192.168.4.1:81",
     handleNewMessage
   );
 
