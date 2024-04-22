@@ -1,4 +1,4 @@
-import { LucideAppWindow } from "lucide-react-native";
+import { LucideBlinds } from "lucide-react-native";
 import React from "react";
 import { Text } from "react-native";
 import { SimpleGrid } from "react-native-super-grid";
@@ -41,7 +41,7 @@ const DevicesSection = () => {
         index={8}
         currentStatus={!!windowStatus}
         title="Windows"
-        icon={<LucideAppWindow size={24} className="text-gray-200" />}
+        icon={<LucideBlinds size={24} className="text-gray-200" />}
         cardProps={{
           pressable: true,
           onPress: () => updateDevice(8, !windowStatus),
