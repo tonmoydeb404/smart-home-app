@@ -1,3 +1,4 @@
+import { LucideAppWindow } from "lucide-react-native";
 import React from "react";
 import { Text } from "react-native";
 import { SimpleGrid } from "react-native-super-grid";
@@ -5,7 +6,7 @@ import DeviceCard from "../../components/device-card";
 import useHome from "../../hooks/contexts/use-home";
 
 const DevicesSection = () => {
-  const { devices, updateDevice } = useHome();
+  const { devices, updateDevice, windowStatus } = useHome();
 
   return (
     <>
@@ -30,6 +31,21 @@ const DevicesSection = () => {
             }}
           />
         )}
+      />
+
+      <Text className="text-slate-300 uppercase font-medium text-sm mb-3">
+        Others
+      </Text>
+
+      <DeviceCard
+        index={8}
+        currentStatus={!!windowStatus}
+        title="Windows"
+        icon={<LucideAppWindow size={24} className="text-gray-200" />}
+        cardProps={{
+          pressable: true,
+          onPress: () => updateDevice(8, !windowStatus),
+        }}
       />
     </>
   );

@@ -8,37 +8,39 @@ const useWebSocket = (url: string, onMessage?: (message: string) => void) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const newSocket = new WebSocket(url);
+    let newSocket = null;
 
-    newSocket.onopen = () => {
-      console.log("OPEN");
+    if (url) {
+      newSocket = new WebSocket(url);
 
-      setIsLoading(false);
-      setIsReady(true);
-    };
+      newSocket.onopen = () => {
+        console.log("OPEN");
 
-    newSocket.onmessage = (event: MessageEvent) => {
-      // console.log("MESSAGE");
-      setMessage(event.data);
-      if (onMessage) onMessage(event.data);
-    };
+        setIsLoading(false);
+        setIsReady(true);
+      };
 
-    newSocket.onclose = (e) => {
-      console.log("CLOSE", e);
-      setIsLoading(false);
-      setIsReady(false);
-    };
+      newSocket.onmessage = (event: MessageEvent) => {
+        // console.log("MESSAGE");
+        setMessage(event.data);
+        if (onMessage) onMessage(event.data);
+      };
 
-    newSocket.onerror = (e) => {
-      console.log("ERROR", e);
-      setIsReady(false);
-      setIsLoading(false);
-    };
+      newSocket.onclose = (e) => {
+        console.log("CLOSE", e);
+        setIsLoading(false);
+        setIsReady(false);
+      };
 
+      newSocket.onerror = (e) => {
+        console.log("ERROR", e);
+        setIsReady(false);
+        setIsLoading(false);
+      };
+    }
     setSocket(newSocket);
-
     return () => {
-      newSocket.close();
+      if (newSocket !== null) newSocket.close();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, reconnectCount]);

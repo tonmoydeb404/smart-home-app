@@ -4,6 +4,8 @@ import { HomeContext } from "../types/home";
 export const defaultHomeContext: HomeContext = {
   isLoading: true,
   isReady: false,
+  windowStatus: undefined,
+  reconnect: () => {},
   devices: [false, false, false, false, false, false, false, false],
   sensors: {
     flame: undefined,
@@ -14,6 +16,7 @@ export const defaultHomeContext: HomeContext = {
   },
 
   updateDevice: (() => {}) as HomeContext["updateDevice"],
+  updateHost: async (_value) => {},
 };
 
 const homeContext = createContext(defaultHomeContext);

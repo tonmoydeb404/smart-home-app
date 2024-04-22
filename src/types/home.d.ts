@@ -10,8 +10,10 @@ export interface HomeContext {
   isLoading: boolean;
   isReady: boolean;
   devices: boolean[];
+  windowStatus: boolean | undefined;
   sensors: SensorState<number | undefined>;
 
   updateDevice: (index: number, status: boolean) => void;
   reconnect: () => void;
+  updateHost: (value: string) => Promise<void>;
 }

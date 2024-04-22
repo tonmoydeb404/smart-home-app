@@ -1,5 +1,5 @@
 import { LucidePower } from "lucide-react-native";
-import React from "react";
+import React, { ReactElement } from "react";
 import { Text, View } from "react-native";
 import { Card, CardBody, CardBodyProps, CardProps } from "./common/card";
 
@@ -8,10 +8,13 @@ type Props = {
   currentStatus: boolean;
   cardProps?: Omit<CardProps, "children">;
   cardBodyProps?: Omit<CardBodyProps, "children">;
+
+  title?: string;
+  icon?: ReactElement;
 };
 
 const DeviceCard = (props: Props) => {
-  const { index, currentStatus, cardBodyProps, cardProps } = props;
+  const { index, currentStatus, cardBodyProps, cardProps, icon, title } = props;
 
   return (
     <Card
@@ -24,10 +27,10 @@ const DeviceCard = (props: Props) => {
             currentStatus ? "bg-blue-600" : "bg-gray-800"
           }`}
         >
-          <LucidePower size={32} className="text-gray-200" />
+          {icon || <LucidePower size={32} className="text-gray-200" />}
         </View>
         <Text className="text-lg text-slate-100 font-medium">
-          Device {index + 1}
+          {title || `Device ${index + 1}`}
         </Text>
       </CardBody>
     </Card>

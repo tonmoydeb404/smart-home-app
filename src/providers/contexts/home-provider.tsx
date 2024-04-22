@@ -1,4 +1,12 @@
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { DEVICE_HOST, WEBSOCKET_PORT } from "../../config";
 import homeContext, { defaultHomeContext } from "../../contexts/home-context";
 import useWebSocket from "../../hooks/use-websocket";
 import { HomeContext, SensorState } from "../../types/home";
@@ -14,6 +22,7 @@ type WS_MESSAGE =
       data: {
         sensors: SensorState;
         devices: number[];
+        window: number;
       };
     }
   | {
@@ -23,6 +32,10 @@ type WS_MESSAGE =
   | {
       type: "DEVICE_UPDATE";
       data: DeviceUpdate;
+    }
+  | {
+      type: "WINDOW_UPDATE";
+      data: number;
     };
 
 type Props = {
@@ -34,7 +47,11 @@ const HomeProvider = (props: Props) => {
 
   // App States ----------------------------------------------------------------------
   const [devices, setDevices] = useState(defaultHomeContext.devices);
+  const [windowStatus, setWindowStatus] = useState(
+    defaultHomeContext.windowStatus
+  );
   const [sensors, setSensors] = useState(defaultHomeContext.sensors);
+  const [deviceHost, setDeviceHost] = useState<undefined | string>(undefined);
 
   // Handlers ----------------------------------------------------------------------
 
@@ -96,7 +113,11 @@ const HomeProvider = (props: Props) => {
     try {
       const response: WS_MESSAGE = JSON.parse(msg);
 
-      if (!response?.type || !response?.data)
+      if (
+        !response?.type ||
+        response?.data == undefined ||
+        response?.data == null
+      )
         throw new Error("Invalid Message");
 
       switch (response.type) {
@@ -121,6 +142,7 @@ const HomeProvider = (props: Props) => {
           }
 
           updateSensors(response.data?.sensors);
+          setWindowStatus(response.data?.window === 1 ? true : false);
 
           break;
         }
@@ -143,8 +165,14 @@ const HomeProvider = (props: Props) => {
           updateSensors(response.data);
           break;
         }
-        default:
+        case "WINDOW_UPDATE": {
+          setWindowStatus(response.data === 1 ? true : false);
           break;
+        }
+        default: {
+          console.log("Unknown Message: ", response);
+          break;
+        }
       }
     } catch (error) {
       console.error("ERROR: handle WS message", { error, msg });
@@ -153,7 +181,7 @@ const HomeProvider = (props: Props) => {
 
   // Dependent States ----------------------------------------------------------------------
   const { isLoading, isReady, send, reconnect } = useWebSocket(
-    "ws://192.168.4.1:81",
+    `ws://${deviceHost}:${WEBSOCKET_PORT}`,
     handleNewMessage
   );
 
@@ -173,15 +201,32 @@ const HomeProvider = (props: Props) => {
     [send]
   );
 
-  // Effects ----------------------------------------------------------------------
-  // useEffect(() => {
-  //   const getIp = async () => {
-  //     // const ip = await getIpAddressAsync();
-  //     // console.log({ ip });
-  //   };
+  const updateHost: HomeContext["updateHost"] = async (value: string) => {
+    try {
+      await AsyncStorage.setItem("DEVICE_HOST", value);
+      setDeviceHost(value);
+    } catch (e) {
+      console.error("ERROR: Saving Device Host: ", e);
+    }
+  };
 
-  //   getIp();
-  // }, []);
+  const persistDeviceHost = async () => {
+    try {
+      const value = await AsyncStorage.getItem("DEVICE_HOST");
+      if (value !== null) {
+        setDeviceHost(value);
+      } else {
+        setDeviceHost(DEVICE_HOST);
+      }
+    } catch (e) {
+      console.error("ERROR: Read Device HOST");
+    }
+  };
+
+  // Effects ----------------------------------------------------------------------
+  useEffect(() => {
+    persistDeviceHost();
+  }, []);
 
   // Memorized values ----------------------------------------------------------------------
 
@@ -190,11 +235,13 @@ const HomeProvider = (props: Props) => {
       isLoading,
       isReady,
       updateDevice,
+      updateHost,
+      windowStatus,
       devices,
       sensors,
       reconnect,
     }),
-    [devices, isLoading, isReady, sensors, updateDevice]
+    [devices, isLoading, isReady, sensors, updateDevice, windowStatus]
   );
 
   return <homeContext.Provider value={value}>{children}</homeContext.Provider>;
