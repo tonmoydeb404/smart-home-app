@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
-const useWebSocket = (url: string, onMessage?: (message: string) => void) => {
+const useWebSocket = (
+  url: string | undefined,
+  onMessage?: (message: string) => void
+) => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [reconnectCount, setReconnectCount] = useState(0);
@@ -10,7 +13,7 @@ const useWebSocket = (url: string, onMessage?: (message: string) => void) => {
   useEffect(() => {
     let newSocket = null;
 
-    if (url) {
+    if (url !== undefined) {
       newSocket = new WebSocket(url);
 
       newSocket.onopen = () => {

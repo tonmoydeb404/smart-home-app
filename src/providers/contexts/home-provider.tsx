@@ -181,7 +181,7 @@ const HomeProvider = (props: Props) => {
 
   // Dependent States ----------------------------------------------------------------------
   const { isLoading, isReady, send, reconnect } = useWebSocket(
-    `ws://${deviceHost}:${WEBSOCKET_PORT}`,
+    deviceHost ? `ws://${deviceHost}:${WEBSOCKET_PORT}` : undefined,
     handleNewMessage
   );
 
