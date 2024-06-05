@@ -47,6 +47,9 @@ const HomeProvider = (props: Props) => {
 
   // App States ----------------------------------------------------------------------
   const [devices, setDevices] = useState(defaultHomeContext.devices);
+  const [devicesDetails, setDeviceDetails] = useState(
+    defaultHomeContext.devicesDetails
+  );
   const [windowStatus, setWindowStatus] = useState(
     defaultHomeContext.windowStatus
   );
@@ -223,9 +226,48 @@ const HomeProvider = (props: Props) => {
     }
   };
 
+  const updateDeviceDetails: HomeContext["updateDeviceDetails"] = async (
+    index,
+    value
+  ) => {
+    try {
+      let updatedDetails;
+
+      setDeviceDetails((details) => {
+        details[index] = value;
+        updatedDetails = details;
+        return details;
+      });
+
+      if (updatedDetails)
+        await AsyncStorage.setItem(
+          "DEVICE_DETAILS",
+          JSON.stringify(updatedDetails)
+        );
+    } catch (e) {
+      console.error("ERROR: Saving Device Details: ", e);
+    }
+  };
+
+  const persistDeviceDetails = async () => {
+    try {
+      const value = await AsyncStorage.getItem("DEVICE_DETAILS");
+      if (value !== null) {
+        const parsedValue = JSON.parse(value);
+
+        if (Array.isArray(parsedValue)) setDeviceDetails(parsedValue as any);
+      } else {
+        setDeviceDetails([]);
+      }
+    } catch (e) {
+      console.error("ERROR: Read Device Details");
+    }
+  };
+
   // Effects ----------------------------------------------------------------------
   useEffect(() => {
     persistDeviceHost();
+    persistDeviceDetails();
   }, []);
 
   // Memorized values ----------------------------------------------------------------------
@@ -240,8 +282,19 @@ const HomeProvider = (props: Props) => {
       devices,
       sensors,
       reconnect,
+      updateDeviceDetails,
+      devicesDetails,
     }),
-    [devices, isLoading, isReady, sensors, updateDevice, windowStatus]
+    [
+      devices,
+      isLoading,
+      isReady,
+      sensors,
+      updateDevice,
+      windowStatus,
+      updateDeviceDetails,
+      devicesDetails,
+    ]
   );
 
   return <homeContext.Provider value={value}>{children}</homeContext.Provider>;

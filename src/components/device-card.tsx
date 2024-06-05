@@ -18,13 +18,13 @@ const DeviceCard = (props: Props) => {
 
   return (
     <Card
-      className="border-none bg-background/60 dark:bg-default-100/50 max-w-[50%] w-full"
       {...cardProps}
+      className={`max-w-[50%] w-full ${cardProps?.className || ""}`}
     >
       <CardBody {...cardBodyProps} className="px-3 py-3">
         <View
-          className={`w-16 h-16 flex items-center justify-center rounded-xl mb-2 ${
-            currentStatus ? "bg-blue-600" : "bg-gray-800"
+          className={`w-16 h-16 flex items-center justify-center border border-slate-500/20 rounded-xl mb-2 ${
+            currentStatus ? "bg-blue-600" : "bg-gray-700/50"
           }`}
         >
           {icon || <LucidePower size={32} className="text-gray-200" />}

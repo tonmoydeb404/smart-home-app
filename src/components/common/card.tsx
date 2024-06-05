@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import {
-  TouchableOpacity,
+  Pressable,
   TouchableOpacityProps,
   View,
   ViewProps,
@@ -16,18 +16,18 @@ export const Card = (props: CardProps) => {
 
   if (pressable === true) {
     return (
-      <TouchableOpacity
-        className={`bg-slate-900 rounded-xl text-slate-100 border border-slate-800 ${className}`}
+      <Pressable
+        className={`bg-white/10 border-white/20 active:bg-white/20 rounded-xl border active:border-slate-700 ${className}`}
         {...other}
       >
         {children}
-      </TouchableOpacity>
+      </Pressable>
     );
   }
 
   return (
     <View
-      className={`bg-slate-900 rounded-xl text-slate-100 border border-slate-800 ${className}`}
+      className={`bg-white/10 border-white/20 rounded-xl border ${className}`}
       {...other}
     >
       {children}

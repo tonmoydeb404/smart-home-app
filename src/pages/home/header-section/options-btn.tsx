@@ -1,4 +1,4 @@
-import { LucideSettings } from "lucide-react-native";
+import { LucideCloudCog } from "lucide-react-native";
 import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import Dialog from "react-native-dialog";
@@ -35,7 +35,7 @@ const OptionsBtn = (props: Props) => {
         onPress={() => setDialog(true)}
         className={"bg-blue-600/30 p-2 rounded-lg"}
       >
-        <LucideSettings size={24} className={"text-blue-600"} />
+        <LucideCloudCog size={24} className={"text-blue-600"} />
       </TouchableOpacity>
       <Dialog.Container
         visible={dialog}

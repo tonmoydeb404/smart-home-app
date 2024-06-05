@@ -15,18 +15,18 @@ const StatsSection = () => {
       </Text>
       <Card className="border-0 bg-transparent mb-8">
         <CardBody className="flex-col">
-          <View className="w-full flex-row my-1 space-x-1">
+          <View className="w-full flex-row my-1">
             <StatCard
               icon="temperature"
               label="Temperature"
               value={getValue("temperature", sensors.temperature)}
-              cardProps={{ className: "w-full flex-1 mx-1" }}
+              cardProps={{ className: "w-full flex-1 mr-1" }}
             />
             <StatCard
               icon="humidity"
               label="Humidity"
               value={getValue("humidity", sensors.humidity)}
-              cardProps={{ className: "w-full flex-1 mx-1" }}
+              cardProps={{ className: "w-full flex-1 ml-1" }}
             />
           </View>
           <View className="w-full flex-row my-1">
@@ -34,13 +34,13 @@ const StatsSection = () => {
               icon="gas"
               label="Gas"
               value={getValue("gas", sensors.gas)}
-              cardProps={{ className: "w-full flex-1 mx-1" }}
+              cardProps={{ className: "w-full flex-1 mr-1" }}
             />
             <StatCard
               icon="fire"
               label="Fire"
               value={getValue("flame", sensors.flame)}
-              cardProps={{ className: "w-full flex-1 mx-1" }}
+              cardProps={{ className: "w-full flex-1 ml-1" }}
             />
           </View>
           <View className="w-full flex-row my-1">
@@ -48,7 +48,7 @@ const StatsSection = () => {
               icon="weather"
               label="Weather"
               value={getValue("rain", sensors.rain)}
-              cardProps={{ className: "w-full flex-1 mx-1" }}
+              cardProps={{ className: "w-full flex-1" }}
             />
           </View>
         </CardBody>

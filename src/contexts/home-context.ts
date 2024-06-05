@@ -7,6 +7,7 @@ export const defaultHomeContext: HomeContext = {
   windowStatus: undefined,
   reconnect: () => {},
   devices: [false, false, false, false, false, false, false, false],
+  devicesDetails: [],
   sensors: {
     flame: undefined,
     gas: undefined,
@@ -16,6 +17,7 @@ export const defaultHomeContext: HomeContext = {
   },
 
   updateDevice: (() => {}) as HomeContext["updateDevice"],
+  updateDeviceDetails: (() => {}) as HomeContext["updateDeviceDetails"],
   updateHost: async (_value) => {},
 };
 

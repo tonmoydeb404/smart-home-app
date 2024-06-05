@@ -36,7 +36,7 @@ const StatCard = (props: Props) => {
   const Icon = icons[icon] || LucideHelpCircle;
 
   return (
-    <Card {...cardProps}>
+    <Card {...cardProps} className={`${cardProps?.className || ""}`}>
       <CardBody className="flex-row items-center gap-2" {...cardBodyProps}>
         <Icon size={32} className="text-blue-600" />
         <View className="flex flex-col">
