@@ -12,7 +12,7 @@ export type CardProps = { pressable?: boolean } & TouchableOpacityProps &
   ViewProps;
 
 export const Card = (props: CardProps) => {
-  const { children, className, pressable, ...other } = props;
+  const { children, className = "", pressable, ...other } = props;
 
   if (pressable === true) {
     return (
@@ -42,7 +42,7 @@ export type CardBodyProps = {
 } & ViewProps;
 
 export const CardBody = (props: CardBodyProps) => {
-  const { children, className, ...other } = props;
+  const { children, className = "", ...other } = props;
   return (
     <View className={`px-1.5 py-2 ${className}`} {...other}>
       {children}

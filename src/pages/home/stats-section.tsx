@@ -13,7 +13,7 @@ const StatsSection = () => {
       <Text className="uppercase text-slate-300 font-medium text-sm mb-2">
         Sensor Stats
       </Text>
-      <Card className="border-none bg-background/60 dark:bg-default-100/50 mb-8">
+      <Card className="border-0 bg-transparent mb-8">
         <CardBody className="flex-col">
           <View className="w-full flex-row my-1 space-x-1">
             <StatCard
