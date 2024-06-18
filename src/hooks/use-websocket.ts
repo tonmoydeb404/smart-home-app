@@ -1,64 +1,62 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useNativeWebSocket from "react-native-use-websocket";
 
 const useWebSocket = (
   url: string | undefined,
   onMessage?: (message: string) => void
 ) => {
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [reconnectCount, setReconnectCount] = useState(0);
+  const didUnmount = useRef(false);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
 
-  useEffect(() => {
-    let newSocket = null;
-
-    if (url !== undefined) {
-      newSocket = new WebSocket(url);
-
-      newSocket.onopen = () => {
+  const { sendMessage, lastMessage, readyState, getWebSocket } =
+    useNativeWebSocket(url || "wss://echo.websocket.org", {
+      onOpen: () => {
         console.log("OPEN");
 
         setIsLoading(false);
         setIsReady(true);
-      };
-
-      newSocket.onmessage = (event: MessageEvent) => {
-        // console.log("MESSAGE");
-        setMessage(event.data);
-        if (onMessage) onMessage(event.data);
-      };
-
-      newSocket.onclose = (e) => {
+      },
+      onClose: (e) => {
         console.log("CLOSE", e);
         setIsLoading(false);
         setIsReady(false);
-      };
-
-      newSocket.onerror = (e) => {
+      },
+      onError: (e) => {
         console.log("ERROR", e);
         setIsReady(false);
         setIsLoading(false);
-      };
-    }
-    setSocket(newSocket);
-    return () => {
-      if (newSocket !== null) newSocket.close();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, reconnectCount]);
+      },
+      onMessage(event) {
+        if (typeof event?.data === "string" && onMessage) onMessage(event.data);
+      },
+      retryOnError: true,
+      shouldReconnect: () => didUnmount.current === false && !url,
+      reconnectAttempts: 10,
+      reconnectInterval: 3000,
+    });
 
-  const send = (data: string) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(data);
-    }
-  };
+  useEffect(() => {
+    return () => {
+      didUnmount.current = true;
+    };
+  }, []);
+
+  const send = useCallback(
+    (data: string) => {
+      if (readyState === 1) {
+        sendMessage(data);
+      }
+    },
+    [readyState]
+  );
 
   const reconnect = () => {
-    setReconnectCount((prev) => prev + 1);
+    console.log("Reconnect");
   };
 
-  return { message, isLoading, isReady, socket, send, reconnect };
+  return { message: lastMessage, isLoading, isReady, send, reconnect };
 };
 
 export default useWebSocket;

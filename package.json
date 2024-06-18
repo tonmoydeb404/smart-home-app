@@ -8,20 +8,23 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "ts:check": "tsc",
-    "build-android": "eas build -p android --profile preview"
+    "build-android": "eas build -p android --profile preview",
+    "build-dev": "npx expo start --no-dev --minify"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
-    "expo": "^51.0.10",
+    "expo": "^51.0.14",
     "expo-network": "~6.0.1",
     "expo-status-bar": "~1.12.1",
     "lucide-react-native": "^0.383.0",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
-    "react-native": "0.74.1",
+    "react-native": "0.74.2",
     "react-native-dialog": "^9.3.0",
     "react-native-super-grid": "^5.1.0",
-    "react-native-svg": "15.2.0"
+    "react-native-svg": "15.2.0",
+    "react-native-use-websocket": "^0.2.6",
+    "react-use-websocket": "3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

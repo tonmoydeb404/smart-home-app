@@ -47,7 +47,11 @@ const OptionsBtn = (props: Props) => {
           Update app host name
         </Dialog.Description>
 
-        <Dialog.Input value={host} onChangeText={setHost} />
+        <Dialog.Input
+          value={host}
+          onChangeText={setHost}
+          className="text-black"
+        />
         <View className="flex-row items-center justify-between">
           <Dialog.Button
             label="Reset"
